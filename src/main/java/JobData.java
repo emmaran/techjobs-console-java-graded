@@ -5,10 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -73,13 +70,21 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
+        // ***** ER NOTES *****
+        // 1. Creates an ArrayList of HashMaps (job entries) called "jobs"
+        // 2. Loops over allJobs (an ArrayList of HashMaps) using a for/each loop
+        // 3. Creates a variable to get the SELECTED COLUMN'S value in a single row (aValue)
+        // 4. Checks that the variable contains the search term
+        // 5. If it does contain a value, it adds the row to the ArrayList "jobs"
+        // 6. Returns "jobs" (ArrayList)
+
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
         for (HashMap<String, String> row : allJobs) {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
@@ -99,7 +104,46 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
-        return null;
+
+        // ***** ER NOTES *****
+        // GOAL: SEARCH FOR A TERM FROM ALL OF THE COLUMNS
+        // • Should not contain duplicate jobs.
+        // • If a new column is added, it'll automatically search the new column as well
+        // • Don't use findByColumnAndValue()
+        // • Will look similar to findByColumnAndValue()
+
+        // 1. Creates an ArrayList of HashMaps (job entries) called "jobs"
+        // 2. Loops over allJobs (an ArrayList of HashMaps) using a for/each loop
+        // 3. Creates a variable to get the SELECTED COLUMN'S value in a single row (aValue)
+        // 4. Checks that the variable contains the search term
+        // 5. If it does contain a value, it adds the row to the ArrayList "jobs"
+        // 6. Returns "jobs" (ArrayList)
+
+        // 1. Create an ArrayList of HashMaps (job entries) called [jobs ArrayList]
+        // 2. Loop over each entry [row] of allJobs
+        // 3. Loop over each column [detail] in the entry
+        // 4. If the column contains the search term, add it to [jobs ArrayList]
+        // 5. If the row has already been added, don't add it again
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs ) {
+            for (Map.Entry<String, String> detail : row.entrySet()) {
+
+//                char firstCharacter = value.charAt(0);
+//                char lastCharacter = value.charAt(value.length() - 1);
+//                String searchedTerm = detail.getValue().substring(firstCharacter, lastCharacter);
+
+                if (detail.getValue().toLowerCase().contains(value.toLowerCase())) {
+
+                    if (!jobs.contains(row)) {
+                        jobs.add(row);
+                    }
+                }
+            }
+        }
+
+        return jobs;
     }
 
     /**
